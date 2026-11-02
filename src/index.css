@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+.dark body {
+  @apply bg-slate-950 text-slate-100;
+}
+* { -webkit-tap-highlight-color: transparent; }
+
+/* thin scrollbars for the big table */
+.thin-scroll::-webkit-scrollbar { height: 10px; width: 10px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
+.dark .thin-scroll::-webkit-scrollbar-thumb { background: #475569; }
+
+@keyframes slidein { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.slidein { animation: slidein .18s ease-out; }
+@keyframes pop { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+.pop { animation: pop .16s ease-out; }
+
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  table { font-size: 11px; }
+}
+.print-only { display: none; }

@@ -1,0 +1,14 @@
+import { createWorker } from 'tesseract.js';
+import { parseOcrText } from '../src/lib/parseCars.js';
+const file = process.argv[2];
+const psm = process.argv[3] || '6';
+const w = await createWorker('kor', 1, { langPath: new URL('../public/tessdata', import.meta.url).pathname, gzip: true, cachePath: '/tmp/tess-cache' });
+await w.setParameters({ tessedit_pageseg_mode: psm, preserve_interword_spaces: '1' });
+const t0 = Date.now();
+const { data } = await w.recognize(file);
+console.log('--- RAW TEXT (', ((Date.now()-t0)/1000).toFixed(1), 's, conf', data.confidence.toFixed(0), ')\n' + data.text);
+const { rows, unparsed } = parseOcrText(data.text);
+console.log('--- PARSED', rows.length, 'rows');
+for (const r of rows) console.log(JSON.stringify({p:r.plate,m:r.model,c:r.color,b:r.block,l:r.location,w:r.warn}));
+console.log('--- UNPARSED', unparsed);
+await w.terminate();
